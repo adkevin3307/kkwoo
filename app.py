@@ -21,9 +21,9 @@ app.config.from_object(__name__)
 Session(app)
 socketio = SocketIO(app)
 
-@app.route('/online')
-def online():
-    return jsonify({'result': ("user_id" in session)})
+@app.errorhandler(404)
+def page_not_found(e):
+    return redirect('/')
 
 @app.route('/', methods=['GET'])
 def index():
@@ -42,6 +42,10 @@ def redirect_uri():
         else:
             return redirect('/index')
     return redirect('/chat')
+
+@app.route('/online')
+def online():
+    return jsonify({'result': ('user_id' in session)})
 
 @app.route('/chat')
 def chat():
@@ -74,4 +78,4 @@ def on_leave(data):
     emit('message', {'msg': username + ' has left the room.'}, room = room)
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port='6666')
+    socketio.run(app, host = '0.0.0.0', port = '6666')
