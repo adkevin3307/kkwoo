@@ -23,7 +23,7 @@ socketio = SocketIO(app)
 
 @app.route('/online')
 def online():
-    return jsonify({'result': ("user_id" in session})
+    return jsonify({'result': ("user_id" in session)})
 
 @app.route('/', methods=['GET'])
 def index():
