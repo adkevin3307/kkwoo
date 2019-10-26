@@ -9,6 +9,11 @@ verify_ssl = true
 flask = "*"
 requests = "*"
 kkbox-developer-sdk = "*"
+flask-socketio = "*"
+flask-session = "*"
+flask-migrate = "*"
+flask-script = "*"
+redis = "*"
 
 [requires]
 python_version = "3.7"
