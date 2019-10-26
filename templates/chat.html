@@ -1,41 +1,41 @@
-<!DOCTYPE html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Document</title>
-        <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-        <script>
-            $(document).ready(function() {
-                // var socket = io.connect('https://' + document.domain + '/chat', {secure: true, rejectUnauthorized: false});
-				var socket = io.connect('https://' + document.domain + '/chat')
-                socket.on('connect', function() {
-                    socket.emit('join', {});
-                });
-                socket.on('message', function(data) {
-                    console.log(data);
-                    $('#chat').val($('#chat').val() + data.msg + '\n');
-                });
-                $('#text').keypress(function(e) {
-                    var code = e.keyCode || e.which;
-                    if (code == 13) {
-                        text = $('#text').val();
-                        $('#text').val('');
-                        socket.emit('text', {'msg': text});
-                    }
-                });
-            })
-            function leave_room() {
-                socket.emit('leave', {}, function(){
-                    socket.disconnect();
-                    window.location.herf = '/';
-                })
-            }
-            
-        </script>
-    </head>
-    <body>
-        <textarea id = 'chat' cols = 80 rows = 20></textarea>
-        <br>
-        <input id = 'text' size = 80>
-    </body>
-</html>
+<html>
+
+<head>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"  crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="../static/css/index.css">
+<script src="../static/js/chat.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+</head>
+
+<title>KKWoo</title>
+
+<body class="text-center">
+<div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+  <header class="masthead mb-auto">
+    <header class="masthead mb-auto">
+      <div class="inner">
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link" href="./index">Home</a>
+          <a class="nav-link active" href="./main">ChatRoom</a>
+          <a class="nav-link" href="./contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+  </header>
+
+  <main role="main" class="inner cover">
+    <h1 class="cover-heading"> KKWoo</h1>
+    <br>
+    <p class="lead">
+      <a href="#" class="btn btn-lg btn-secondary" onclick="chatting()"> 點擊開始聊天 </a>
+    </p>
+  </main>
+
+  <footer class="mastfoot mt-auto">
+  </footer>
+</div>
+</body>
+<html>

@@ -15,28 +15,27 @@
     <header class="masthead mb-auto">
       <div class="inner">
         <nav class="nav nav-masthead justify-content-center">
-          <a class="nav-link active" href="./index">Home</a>
+          <a class="nav-link" href="./index">Home</a>
           <a class="nav-link" href="./main">ChatRoom</a>
-          <a class="nav-link" href="./contact">Contact</a>
+          <a class="nav-link active" href="./contact">Contact</a>
         </nav>
       </div>
     </header>
 
     <main role="main" class="inner cover">
-      <h1 class="cover-heading"> KKWoo</h1>
+      <h1 class="cover-heading"></h1>
       <br>
       <p class="lead">
-        <a href="#" class="btn btn-lg btn-secondary" onclick="login()"> KKBOX 認證</a>
       </p>
     </main>
-
-    <footer class="mastfoot mt-auto">
-    </footer>
+    <!--
+  <footer class="mastfoot mt-auto">
+  </footer> -->
   </div>
 </body>
 <script>
-  function login() {
+  function play() {
     location.href = "https://account.kkbox.com/oauth2/authorize?response_type=code&client_id=8fee04af2d27c0c0e5125b86dfdf88f4&state=123&redirect_uri=http%3A%2F%2Flocalhost:5000/redirect"
-  };
+  }
 </script>
 <html>

@@ -1,0 +1,30 @@
+textarea {
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 5px;
+  border: none;
+  resize: none;
+  float: left;
+  height: 80%;
+  width: 50%;
+  font-size: 35px;
+}
+
+.masthead {
+  align-self: center
+}
+
+.transmit {
+  color: white;
+}
+
+#otherText {
+  text-align: left;
+}
+
+#userText {
+  text-align: right;
+}
+
+.chatbox{
+  border-radius: 5px;
+}

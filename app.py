@@ -5,6 +5,7 @@ from flask_session import Session
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from flask_migrate import Migrate, MigrateCommand
 from redis import Redis
+import kkbox_api
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
@@ -20,37 +21,52 @@ app.config.from_object(__name__)
 Session(app)
 socketio = SocketIO(app)
 
+@app.route('/online')
+def online():
+    return jsonify({'result': ("user_id" in session})
+
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET'])
 def login():
-    if request.method == 'POST':
-        session['username'] = request.values['username']
-        session['room'] = request.values['room']
+    return redirect('/chat')
+
+@app.route('/redirect', methods = ['GET'])
+def redirect_uri():
+    if request.method == 'GET':
+        if 'code' in request.args:
+            kkbox_api.access_token(request.args['code'])
+            kkbox_api.me()
+        else:
+            return redirect('/index')
     return redirect('/chat')
 
 @app.route('/chat')
 def chat():
-    username = session.get('username')
-    room = session.get('room')
     return render_template('chat.html')
 
-@socketio.on('text', namespace = '/chat')
+@app.route('/chatroom')
+def chatroom():
+    username = session.get('username')
+    room = session.get('room')
+    return render_template('chatroom.html')
+
+@socketio.on('text', namespace = '/chatroom')
 def message(data):
     username = session.get('username')
     room = session.get('room')
     emit('message', {'msg': username + ': ' + data['msg']}, room = room)
 
-@socketio.on('join', namespace = '/chat')
+@socketio.on('join', namespace = '/chatroom')
 def on_join(data):
     username = session.get('username')
     room = session.get('room')
     join_room(room)
     emit('message', {'msg': username + ' has entered the room :D'}, room = room)
 
-@socketio.on('leave', namespace = '/chat')
+@socketio.on('leave', namespace = '/chatroom')
 def on_leave(data):
     username = session.get('username')
     room = session.get('room')
