@@ -16,7 +16,7 @@ app.config['SESSION_REDIS'] = Redis(
 app.config['SESSION_USE_SINGER'] = True
 app.config['SESSION_PERMANENT'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
-app.debug = True
+#app.debug = True
 app.config.from_object(__name__)
 Session(app)
 socketio = SocketIO(app)
@@ -82,5 +82,6 @@ def on_leave(data):
     leave_room(room)
     emit('message', {'msg': username + ' has left the room.'}, room = room)
 
+#def start():
 if __name__ == '__main__':
-    socketio.run(app, host = '0.0.0.0', port = '5000')
+    socketio.run(app, host = '0.0.0.0', port = '5000', debug = True)
