@@ -1,5 +1,6 @@
 import json
 import requests
+from flask import session
 from kkbox_developer_sdk.auth_flow import KKBOXOAuth
 
 with open('config.json', 'r') as file:
@@ -8,7 +9,7 @@ with open('config.json', 'r') as file:
 def _getHeader():
     headers = {
         'accept': 'application/json',
-        'authorization': 'Bearer {}'.format() # TODO get access_token from session
+        'authorization': 'Bearer {}'.format(session.get('access_token'))
     }
     return headers
 
@@ -25,11 +26,11 @@ def access_token(code):
         'client_secret': config['SECRET']
     }
     r = requests.post(url, headers = headers, data = data)
-    # TODO json.loads(r.text)['access_token'] store in session
+    session['access_token'] = json.loads(r.text)['access_token']
 
 def me():
     r = requests.get('https://api.kkbox.com/v1.1/me', headers = _getHeader())
-    return json.loads(r.text)
+    session['user_id'] = json.loads(r.text)['id']
 
 def playlist_tracks(playlist_id):
     r = requests.get('https://api.kkbox.com/v1.1/shared-playlists/{}/tracks'.format(playlist_id), headers = _getHeader())

@@ -24,7 +24,7 @@ def rate(user_id_1, user_id_2):
     artist_2 = _calculate(user_id_2)
     same_artist = set(artist_1.keys()) & set(artist_2.keys())
     for artist in same_artist:
-        artist_weight = (artist_1[artist] ** 2) * (artist_2[artist] ** 2)
+        artist_weight = (artist_1[artist] * artist_2[artist]) ** 2
         artist_total = 0
         for album in kkbox_api.artist_albums(artist)['data']:
             artist_total += kkbox_api.album_tracks(album['id'])['data']['track_number']
