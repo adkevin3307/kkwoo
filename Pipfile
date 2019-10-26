@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 flask = "*"
 requests = "*"
+kkbox-developer-sdk = "*"
 
 [requires]
 python_version = "3.7"

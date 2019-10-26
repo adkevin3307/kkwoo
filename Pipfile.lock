@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d99bd6e13b173278b5b31022309611c275578426d46751b984b34b7c6f9234af"
+            "sha256": "5f8ce094a06ebd733380619dcc77ec194437275b78a4923b6395f2ea92d65f79"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -65,6 +65,13 @@
                 "sha256:9fe95f19286cfefaa917656583d020be14e7859c6b0252588391e47db34527de"
             ],
             "version": "==2.10.3"
+        },
+        "kkbox-developer-sdk": {
+            "hashes": [
+                "sha256:1cf01072b2a5049e5160f761168aa4e39b313d036c1a752bfb9b58dbd2c0c91c"
+            ],
+            "index": "pypi",
+            "version": "==1.0.7"
         },
         "markupsafe": {
             "hashes": [
