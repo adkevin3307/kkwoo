@@ -2,18 +2,55 @@ import json
 import requests
 from kkbox_developer_sdk.auth_flow import KKBOXOAuth
 
-access_token = ''
+with open('config.json', 'r') as file:
+    config = json.load(file)
 
-host = 'https://api.kkbox.com/v1.1/'
-headers = {
-    'accept': 'application/json',
-    'authorization': 'Bearer {}'.format(access_token),
-}
+def _getHeader():
+    headers = {
+        'accept': 'application/json',
+        'authorization': 'Bearer {}'.format() # TODO get access_token from session
+    }
+    return headers
+
+def access_token(code):
+    url = 'https://account.kkbox.com/oauth2/token'
+    headers = {
+        'Accept': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    data = {
+        'grant_type': 'authorization_code',
+        'code': code,
+        'client_id': config['ID'],
+        'client_secret': config['SECRET']
+    }
+    r = requests.post(url, headers = headers, data = data)
+    # TODO json.loads(r.text)['access_token'] store in session
 
 def me():
-    r = requests.get(host + 'me', headers = headers)
+    r = requests.get('https://api.kkbox.com/v1.1/me', headers = _getHeader())
     return json.loads(r.text)
 
-def playlists(limit):
-    r = requests.get(host + 'me/playlists?limit={}'.format(limit), headers = headers)
+def playlist_tracks(playlist_id):
+    r = requests.get('https://api.kkbox.com/v1.1/shared-playlists/{}/tracks'.format(playlist_id), headers = _getHeader())
+    return json.loads(r.text)
+
+def artist_albums(artist_id):
+    r = requests.get('https://api.kkbox.com/v1.1/artists/{}/albums'.format(artist_id), headers = _getHeader())
+    return json.loads(r.text)
+
+def album_tracks(album_id):
+    r = requests.get('https://api.kkbox.com/v1.1/albums/{}/tracks'.format(album_id), headers = _getHeader())
+    return json.loads(r.text)
+
+def user_album_collection(user_id):
+    r = requests.get('https://api.kkbox.com/v1.1/users/{}/album-collection'.format(user_id), headers = _getHeader())
+    return json.loads(r.text)
+
+def user_playlist_collection(user_id):
+    r = requests.get('https://api.kkbox.com/v1.1/users/{}/playlist-collection'.format(user_id), headers = _getHeader())
+    return json.loads(r.text)
+
+def user_shared_playlists(user_id):
+    r = requests.get('https://api.kkbox.com/v1.1/users/{}/shared-playlists'.format(user_id), headers = _getHeader())
     return json.loads(r.text)
