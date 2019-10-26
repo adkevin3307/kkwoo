@@ -58,6 +58,10 @@ def chatroom():
     room = session.get('room')
     return render_template('chatroom.html')
 
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
 @socketio.on('text', namespace = '/chatroom')
 def message(data):
     username = session.get('username')
