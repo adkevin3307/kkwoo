@@ -30,7 +30,7 @@ def access_token(code):
 
 def me():
     r = requests.get('https://api.kkbox.com/v1.1/me', headers = _getHeader())
-    return json.loads(r.text)
+    session['user_id'] = json.loads(r.text)['id']
 
 def playlist_tracks(playlist_id):
     r = requests.get('https://api.kkbox.com/v1.1/shared-playlists/{}/tracks'.format(playlist_id), headers = _getHeader())
