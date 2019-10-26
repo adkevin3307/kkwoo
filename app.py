@@ -1,6 +1,6 @@
 import os
 from datetime import timedelta
-from flask import Flask, request, render_template, redirect, session
+from flask import Flask, request, render_template, redirect, session, jsonify
 from flask_session import Session
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from flask_migrate import Migrate, MigrateCommand
@@ -16,7 +16,7 @@ app.config['SESSION_REDIS'] = Redis(
 app.config['SESSION_USE_SINGER'] = True
 app.config['SESSION_PERMANENT'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
-
+app.debug = True
 app.config.from_object(__name__)
 Session(app)
 socketio = SocketIO(app)
@@ -25,11 +25,12 @@ socketio = SocketIO(app)
 def page_not_found(e):
     return redirect('/')
 
-@app.route('/', methods=['GET'])
+@app.route('/')
+@app.route('/index')
 def index():
     return render_template('index.html')
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods = ['GET'])
 def login():
     return redirect('/chat')
 
@@ -78,4 +79,4 @@ def on_leave(data):
     emit('message', {'msg': username + ' has left the room.'}, room = room)
 
 if __name__ == '__main__':
-    socketio.run(app, host = '0.0.0.0', port = '6666')
+    socketio.run(app, host = '0.0.0.0', port = '5000')
