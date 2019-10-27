@@ -35,15 +35,15 @@ def me():
     session['room'] = session.get('user_id')
 
 def playlist_tracks(playlist_id):
-    r = requests.get('https://api.kkbox.com/v1.1/shared-playlists/{}/tracks'.format(playlist_id), headers = _getHeader())
+    r = requests.get('https://api.kkbox.com/v1.1/shared-playlists/{}/tracks?territory=TW'.format(playlist_id), headers = _getHeader())
     return json.loads(r.text)
 
 def artist_albums(artist_id):
-    r = requests.get('https://api.kkbox.com/v1.1/artists/{}/albums'.format(artist_id), headers = _getHeader())
+    r = requests.get('https://api.kkbox.com/v1.1/artists/{}/albums?territory=TW'.format(artist_id), headers = _getHeader())
     return json.loads(r.text)
 
 def album_tracks(album_id):
-    r = requests.get('https://api.kkbox.com/v1.1/albums/{}/tracks'.format(album_id), headers = _getHeader())
+    r = requests.get('https://api.kkbox.com/v1.1/albums/{}/tracks?territory=TW'.format(album_id), headers = _getHeader())
     return json.loads(r.text)
 
 def user_album_collection(user_id):

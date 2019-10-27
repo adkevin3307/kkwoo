@@ -27,4 +27,55 @@ textarea {
 
 .chatbox{
   border-radius: 5px;
+  display: inline-block;
+  height: 80%;
+  overflow: auto;
+  padding: 10px;
+}
+
+.alignleft{
+  float: left;
+}
+
+.alignright{
+  float: right;
+}
+
+p{
+  color:black;
+  font-size: 20px;
+}
+
+.box {
+  width: 100px;
+  background: #00bfb6;
+  color: #fff;
+  font-family: arial;
+  position: relative;
+  border-radius: 3px;
+  overflow-wrap: inherit;
+}
+
+
+.sb1:before {
+  content: "";
+  position: absolute;
+  border-left: 5px solid #00bfb6;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #00bfb6;
+  border-bottom: 5px solid transparent;
+  right: -10px;
+  top: 6px;
+}
+
+
+.sb2:before {
+  content:"";
+  position: absolute;
+  border-left: 5px solid transparent;
+  border-right: 5px solid #00bfb6;
+  border-top: 5px solid #00bfb6;
+  border-bottom: 5px solid transparent;
+  left: -10px;
+  top: 6px;
 }
