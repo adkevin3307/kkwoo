@@ -109,3 +109,11 @@ body {
 .mastfoot {
   color: rgba(255, 255, 255, .5);
 }
+
+.myimg{
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  float: left;
+  top:30%;
+}

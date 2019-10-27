@@ -16,8 +16,9 @@ app.config['SESSION_REDIS'] = Redis(
 app.config['SESSION_USE_SINGER'] = True
 app.config['SESSION_PERMANENT'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 #app.debug = True
-app.config.from_object(__name__)
+#app.config.from_object(__name__)
 Session(app)
 socketio = SocketIO(app)
 
@@ -41,6 +42,7 @@ def redirect_uri():
             kkbox_api.access_token(request.args['code'])
             kkbox_api.me()
         else:
+            print('i\'m here')
             return redirect('/index')
     return redirect('/chat')
 
