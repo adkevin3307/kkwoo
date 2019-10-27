@@ -6,6 +6,8 @@ from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from flask_migrate import Migrate, MigrateCommand
 from redis import Redis
 import kkbox_api
+from algorithm import is_suit
+from time import time
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
@@ -20,6 +22,8 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
 app.config.from_object(__name__)
 Session(app)
 socketio = SocketIO(app)
+
+matching_pool = set()
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -47,6 +51,30 @@ def redirect_uri():
 @app.route('/online')
 def online():
     return jsonify({'result': ('user_id' in session)})
+
+@app.route('/match')
+def match():
+    start = time()
+    me = session.get('user_id')
+    room = session.get('room')
+    for users in matching_pool:
+        if is_suit(users, me):
+            emit(users, {'target_room': room}, brodcast = True)
+            # matching_pool.remove(users) # set version pool
+            del matching_pool[users]  # dict version pool
+            return redirect('/chatroom')
+        if time() - matching_pool[users] >= 300:
+            del matching_pool[users]
+            emit(users, {'target_room': 'None'}, broadcast = True)
+        if time() - start >= 30: # TTL: 30s
+            return redirect('/sorry')
+    else: # not match in the pool
+        matching_pool[me] = time() # dict version pool
+        return jsonify({'result': False})
+
+@app.route('/sorry')
+def sorry():
+    return render_template('sorry.html') # TODO ANDY
 
 @app.route('/chat')
 def chat():
@@ -82,6 +110,5 @@ def on_leave(data):
     leave_room(room)
     emit('message', {'msg': username + ' has left the room.'}, room = room)
 
-#def start():
 if __name__ == '__main__':
     socketio.run(app, host = '0.0.0.0', port = '5000', debug = True)
