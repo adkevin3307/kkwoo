@@ -30,7 +30,7 @@ def _calculate(artist_1, artist_2):
     for artist_id in artist_ids:
         n = _artist_tracks(artist_id)
         n1, n2 = artist_1[artist_id], artist_2[artist_id]
-        rate = (n1 * n2) / ((n ** 0.5) * abs(n1 - n2 + 1))
+        rate = (n1 * n2) / ((n ** 0.5) * (abs(n1 - n2) + 1))
         success.append(rate >= (0.6 * n))
     return sum(success) / len(success)
 
