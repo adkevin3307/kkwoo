@@ -46,7 +46,6 @@ def redirect_uri():
             kkbox_api.access_token(request.args['code'])
             kkbox_api.me()
         else:
-            print('i\'m here')
             return redirect('/index')
     return redirect('/chat')
 
@@ -72,7 +71,7 @@ def match():
             return redirect('/sorry')
     else: # not match in the pool
         matching_pool[me] = time() # dict version pool
-        return jsonify({'result': False})
+        return jsonify({'result': 'waiting'})
 
 @app.route('/sorry')
 def sorry():
@@ -91,6 +90,16 @@ def chatroom():
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+@app.route('/get_user')
+def get_user():
+    return jsonify({'user_id': session.get('user_id')})
+
+@app.route('/post_room', methods = ['POST'])
+def post_room():
+    if request.method == 'POST':
+        session['room'] = request.values('target_room')
+        return redirect('/chatroom')
 
 @socketio.on('text', namespace = '/chatroom')
 def message(data):
