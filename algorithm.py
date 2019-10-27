@@ -1,7 +1,7 @@
 import kkbox_api
 from collections import defaultdict
 
-def _calculate(user_id):
+def _getArtist(user_id):
     artist = defaultdict(int)
     albums = kkbox_api.user_album_collection(user_id)['data']
     playlists = kkbox_api.user_playlist_collection(user_id)['data']
@@ -15,17 +15,27 @@ def _calculate(user_id):
     for playlist in shared_playlists:
         for track in kkbox_api.playlist_tracks(playlist['id'])['data']:
             artist[track['artist']['id']] += 1
-    
+
     return artist
 
-def rate(user_id_1, user_id_2):
-    weight = 0
-    artist_1 = _calculate(user_id_1)
-    artist_2 = _calculate(user_id_2)
-    same_artist = set(artist_1.keys()) & set(artist_2.keys())
-    for artist in same_artist:
-        artist_weight = (artist_1[artist] * artist_2[artist]) ** 2
-        artist_total = 0
-        for album in kkbox_api.artist_albums(artist)['data']:
-            artist_total += kkbox_api.album_tracks(album['id'])['data']['track_number']
-        weight += artist_weight / artist_total
+def _artist_tracks(artist_id):
+    total_tracks = 0
+    for album in kkbox_api.artist_albums(artist_id)['data']:
+        total_tracks += kkbox_api.album_tracks(album['id'])['data']['track_number']
+    return total_tracks
+
+def _calculate(artist_1, artist_2):
+    success = []
+    artist_ids = set(artist_1.keys()) | set(artist_2.keys())
+    for artist_id in artist_ids:
+        n = _artist_tracks(artist_id)
+        n1, n2 = artist_1[artist_id], artist_2[artist_id]
+        rate = (n1 * n2) / ((n ** 0.5) * abs(n1 - n2 + 1))
+        success.append(rate >= (0.6 * n))
+    return sum(success) / len(success)
+
+def is_suit(user_id_1, user_id_2):
+    artist_1 = _getArtist(user_id_1)
+    artist_2 = _getArtist(user_id_2)
+    success_rate = _calculate(artist_1, artist_2)
+    return success_rate >= 0.25
