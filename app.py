@@ -1,7 +1,7 @@
 import os
 from datetime import timedelta
 from flask import Flask, request, render_template, redirect, session, jsonify
-from flask_session import Session
+# from flask_session import Session
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from flask_migrate import Migrate, MigrateCommand
 # from redis import Redis
@@ -79,11 +79,11 @@ def match():
     else: # not match in the pool
         print('here')
         matching_pool[me] = time() # dict version pool
-        return jsonify({'result': 'waiting'})
+        return jsonify({'url': 'waiting'}) # TODO should be result: 'waiting'
 
 @app.route('/sorry')
 def sorry():
-    return render_template('sorry.html') # TODO ANDY
+    return render_template('sorry.html')
 
 @app.route('/chat')
 def chat():
@@ -112,18 +112,20 @@ def post_room():
         # return redirect('/chatroom', code=307)
         return jsonify({'url': '/chatroom'})
 
-@socketio.on('text', namespace = '/chatroom')
-def message(data):
-    username = session.get('username')
-    room = session.get('room')
-    emit('message', {'msg': username + ': ' + data['msg']}, room = room)
-
 @socketio.on('join', namespace = '/chatroom')
 def on_join(data):
+    print('backend in socket join')
     username = session.get('username')
     room = session.get('room')
     join_room(room)
     emit('message', {'msg': username + ' has entered the room :D'}, room = room)
+
+@socketio.on('text', namespace = '/chatroom')
+def message(data): # TODO update message
+    print('backend in socket message')
+    username = session.get('username')
+    room = session.get('room')
+    emit('message', {'msg': username + ': ' + data['msg']}, room = room)
 
 @socketio.on('leave', namespace = '/chatroom')
 def on_leave(data):
