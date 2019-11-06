@@ -4,31 +4,33 @@ from flask import Flask, request, render_template, redirect, session, jsonify
 from flask_session import Session
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from flask_migrate import Migrate, MigrateCommand
-from redis import Redis
+# from redis import Redis
 import kkbox_api
 from algorithm import is_suit
 from time import time
 
+# passwd = open('redis_config.txt', 'r').read()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
-app.config['SESSION_TYPE'] = 'redis'
-app.config['SESSION_REDIS'] = Redis(
-        host = 'localhost',
-        port = 6379)
+# app.config['SESSION_TYPE'] = 'redis'
+# app.config['SESSION_REDIS'] = Redis(
+#         host = 'localhost',
+#         port = 6379i,
+#  	      password = passwd)
 app.config['SESSION_USE_SINGER'] = True
 app.config['SESSION_PERMANENT'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-#app.debug = True
-#app.config.from_object(__name__)
-Session(app)
+app.debug = True
+# app.config.from_object(__name__)
+# Session(app)
 socketio = SocketIO(app)
 
-matching_pool = set()
+matching_pool = {}
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return redirect('/')
+# @app.errorhandler(404)
+# def page_not_found(e):
+#     return redirect('/')
 
 @app.route('/')
 @app.route('/index')
@@ -55,21 +57,27 @@ def online():
 
 @app.route('/match')
 def match():
+    print('match')
     start = time()
     me = session.get('user_id')
     room = session.get('room')
     for users in matching_pool:
         if is_suit(users, me):
-            emit(users, {'target_room': room}, brodcast = True)
+            print('match success')
+            print('users: {}, me: {}, room: {}'.format(users, me, room))
+            socketio.emit(users, {'target_room': room}, broadcast = True, namespace='/chat')
             # matching_pool.remove(users) # set version pool
             del matching_pool[users]  # dict version pool
-            return redirect('/chatroom')
+            # return redirect('/chatroom', code=302)
+            return jsonify({'url': '/chatroom'})
         if time() - matching_pool[users] >= 300:
             del matching_pool[users]
-            emit(users, {'target_room': 'None'}, broadcast = True)
+            socketio.emit(users, {'target_room': 'None'}, broadcast = True, namespace='/chat')
         if time() - start >= 30: # TTL: 30s
-            return redirect('/sorry')
+            # return redirect('/sorry', code=302)
+            return jsonify({'url': '/sorry'})
     else: # not match in the pool
+        print('here')
         matching_pool[me] = time() # dict version pool
         return jsonify({'result': 'waiting'})
 
@@ -84,6 +92,7 @@ def chat():
 @app.route('/chatroom')
 def chatroom():
     username = session.get('username')
+    print('{} in chatroom'.format(username))
     room = session.get('room')
     return render_template('chatroom.html')
 
@@ -98,8 +107,10 @@ def get_user():
 @app.route('/post_room', methods = ['POST'])
 def post_room():
     if request.method == 'POST':
-        session['room'] = request.values('target_room')
-        return redirect('/chatroom')
+        session['room'] = request.values['target_room']
+        print(session['room'])
+        # return redirect('/chatroom', code=307)
+        return jsonify({'url': '/chatroom'})
 
 @socketio.on('text', namespace = '/chatroom')
 def message(data):
@@ -122,4 +133,5 @@ def on_leave(data):
     emit('message', {'msg': username + ' has left the room.'}, room = room)
 
 if __name__ == '__main__':
-    socketio.run(app, host = '0.0.0.0', port = '5000', debug = True)
+    socketio.run(app, host = '0.0.0.0', port = '5000')
+	# app.run(host = '0.0.0.0', port='5000')

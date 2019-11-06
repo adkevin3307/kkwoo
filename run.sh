@@ -1,1 +1,1 @@
-pipenv run gunicorn --worker-class eventlet --bind 0.0.0.0:5000 -w 1 app:app
+PYTHONUNBUFFERED=TRUE sudo pipenv run gunicorn --worker-class eventlet --bind 0.0.0.0:5000 -w 1 --log-level debug --capture-output --error-logfile /var/log/gunicorn/error.log --log-file /var/log/gunicorn/log.log app:app

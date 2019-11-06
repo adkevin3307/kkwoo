@@ -1,5 +1,6 @@
 $(document).ready(function () {
-  var socket = io.connect('https://' + document.domain + '/chat')
+  console.log("in chatroom.html");
+  var socket = io.connect('https://' + document.domain + '/chatroom')
   socket.on('connect', function () {
     socket.emit('join', {});
   });
@@ -17,7 +18,7 @@ $(document).ready(function () {
 
   socket.on('message', function (data) {
     console.log(data);
-    $('#otherText').val($('#otherText').val() + data.msg + '\n');
+    $('.chatbox').val($('.chatbox').val() + data.msg + '\n');
   });
 
 
