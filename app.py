@@ -87,10 +87,15 @@ def sorry():
 
 @app.route('/chat')
 def chat():
+    if 'user_id' not in session:
+        return redirect('/index')
     return render_template('chat.html')
+    
 
 @app.route('/chatroom')
 def chatroom():
+    if 'user_id' not in session:
+        return redirect('/index')
     username = session.get('username')
     print('{} in chatroom'.format(username))
     room = session.get('room')
