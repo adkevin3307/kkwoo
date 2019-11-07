@@ -26,16 +26,12 @@ def _artist_tracks(artist_id):
 
 def _calculate(artist_1, artist_2):
     success = []
-    print('artist_1: {}'.format(artist_1))
-    print('artist_2: {}'.format(artist_2))
     artist_ids = set(artist_1.keys()) | set(artist_2.keys())
     for artist_id in artist_ids:
         n = _artist_tracks(artist_id)
         n1, n2 = artist_1[artist_id], artist_2[artist_id]
-        print('n: {}, n1: {}, n2: {}'.format(n, n1, n2))
         rate = (n1 * n2) / ((n ** 0.5) * (abs(n1 - n2) + 1))
         success.append(rate >= (0.6 * n))
-    print(success)
     return sum(success) / (len(success) if len(success) != 0 else 1)
 
 def is_suit(user_id_1, user_id_2):

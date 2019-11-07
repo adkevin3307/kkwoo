@@ -1,3 +1,6 @@
+html {
+  font-family: 'Noto Sans TC', sans-serif !important;
+}
 textarea {
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 5px;
@@ -26,6 +29,7 @@ textarea {
 }
 
 .chatbox{
+  font-family: 'Noto Sans TC', sans-serif !important;
   border-radius: 5px;
   display: inline-block;
   height: 80%;
@@ -82,21 +86,26 @@ p{
 }
 
 .msg_container{
-  margin-top: 10px;
-  margin-bottom: auto;
-  margin-left: 10px;
-  border-radius: 25px;
   background-color: #82ccdd;
-  padding: 10px;
-  position: relative;
 }
 
 .msg_container_send{
+  background-color: #78e08f;
+}
+
+.messagebox
+{
   margin-top: 10px;
   margin-bottom: auto;
   margin-right: 10px;
   border-radius: 25px;
-  background-color: #78e08f;
-  padding: 5px;
   position: relative;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  max-width: 90%;
+  word-wrap: break-word;
+  text-align: left;
 }
+

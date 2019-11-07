@@ -11,8 +11,6 @@ window.onload = function () {
       }
     }
   });
-
-
 };
 
 var user_id;
@@ -25,29 +23,27 @@ $(document).ready(function () {
     success: function (result) {
       user_id = result['user_id']
       document.cookie = "user_id =" + result['user_id'];
-      console.log(user_id);
     }
   });
-
 });
 
 
 function chat() {
-  var matching_socket = io.connect('http://' + document.domain +'/chat');
+  var matching_socket = io.connect('https://' + document.domain + '/chat');
   console.log("user in chat " + user_id);
   matching_socket.on(user_id, function (data) {
     console.log('matching_socket in chat.js name ' + user_id)
-    // console.log(data);
     if (data.target_room === 'None') {
       location.href = '/sorry';
     }
     else {
       var room = data.target_room
-      var chatroom_socket = io.connect('http://' + document.domain +'/chatroom')
-      chatroom_socket.emit('join', {});  //which room
+      var chatroom_socket = io.connect('https://' + document.domain + '/chatroom');
+      chatroom_socket.emit('join', {});
       $.ajax({
         url: "/post_room",
         type: "POST",
+        async: true,
         data: { 'target_room': room },
         success: function (response) {
           console.log(response);
@@ -65,14 +61,13 @@ function chat() {
   })
   $.ajax({
     url: '/match',
+    async: true,
     type: 'GET',
     success: function (response) {
-      console.log('/match success')
-      console.log(response)
+      console.log('frontend matching (chat.js)', response);
       if (response['url'] != 'waiting') // TODO reponse['result']
         location.href = response['url'];
-      // console.log(" match response "+response['url']);
-      // location.href = response['url'];
+
     }
   });
 }
