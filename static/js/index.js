@@ -1,8 +1,8 @@
-$(window).bind('beforeunload', function (e) {
-    console.log(e);
-    return '';
+// $(window).bind('beforeunload', function (e) {
+//     console.log(e);
+//     return '';
 
-});
+// });
 
 function login()
 {

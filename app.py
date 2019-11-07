@@ -124,7 +124,7 @@ def on_join(data):
     user_id = session.get('user_id')
     room = session.get('room')
     join_room(room)
-    emit('message', {'msg': user_id + ' has entered the room :D'}, room = room)
+    emit('message', {'msg': user_id + ':has entered the room :D'}, room = room)
 
 @socketio.on('text', namespace = '/chatroom')
 def message(data): # TODO update message
@@ -140,7 +140,7 @@ def on_leave(data):
     user_id = session.get('user_id')
     room = session.get('room')
     leave_room(room)
-    emit('message', {'msg': user_id + ' has left the room.'}, room = room)
+    emit('message', {'msg': user_id + ':has left the room.'}, room = room)
 
 if __name__ == '__main__':
     socketio.run(app, host = '0.0.0.0', port = '5000')

@@ -17,11 +17,11 @@ textarea {
   color: white;
 }
 
-#otherText {
+.otherText {
   text-align: left;
 }
 
-#userText {
+.userText {
   text-align: right;
 }
 
@@ -31,6 +31,7 @@ textarea {
   height: 80%;
   overflow: auto;
   padding: 10px;
+  color:black;
 }
 
 .alignleft{
@@ -78,4 +79,24 @@ p{
   border-bottom: 5px solid transparent;
   left: -10px;
   top: 6px;
+}
+
+.msg_container{
+  margin-top: 10px;
+  margin-bottom: auto;
+  margin-left: 10px;
+  border-radius: 25px;
+  background-color: #82ccdd;
+  padding: 10px;
+  position: relative;
+}
+
+.msg_container_send{
+  margin-top: 10px;
+  margin-bottom: auto;
+  margin-right: 10px;
+  border-radius: 25px;
+  background-color: #78e08f;
+  padding: 5px;
+  position: relative;
 }

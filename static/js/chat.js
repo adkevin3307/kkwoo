@@ -12,6 +12,7 @@ window.onload = function () {
     }
   });
 
+
 };
 
 var user_id;
@@ -23,6 +24,7 @@ $(document).ready(function () {
     async: false,
     success: function (result) {
       user_id = result['user_id']
+      document.cookie = "user_id =" + result['user_id'];
       console.log(user_id);
     }
   });
@@ -31,7 +33,7 @@ $(document).ready(function () {
 
 
 function chat() {
-  var matching_socket = io.connect('https://' + document.domain + '/chat');
+  var matching_socket = io.connect('http://' + document.domain +'/chat');
   console.log("user in chat " + user_id);
   matching_socket.on(user_id, function (data) {
     console.log('matching_socket in chat.js name ' + user_id)
@@ -41,7 +43,7 @@ function chat() {
     }
     else {
       var room = data.target_room
-      var chatroom_socket = io.connect('https://' + document.domain + '/chatroom')
+      var chatroom_socket = io.connect('http://' + document.domain +'/chatroom')
       chatroom_socket.emit('join', {});  //which room
       $.ajax({
         url: "/post_room",
