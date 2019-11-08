@@ -1,6 +1,7 @@
 $(document).ready(function () {
   console.log("in chatroom.html");
-  var socket = io.connect('https://' + document.domain + '/chatroom');  //' + document.domain + '
+  var socket = io.connect('https://' + document.domain + '/chatroom');
+  // var socket = io.connect('http://' + document.domain + location.port + '/chatroom');
   socket.on('connect', function () {
     socket.emit('join', {});
   });

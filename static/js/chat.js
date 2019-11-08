@@ -30,6 +30,7 @@ $(document).ready(function () {
 
 function chat() {
   var matching_socket = io.connect('https://' + document.domain + '/chat');
+  // var matching_socket = io.connect('http://' + document.domain + location.port + '/chat');
   console.log("user in chat " + user_id);
   matching_socket.on(user_id, function (data) {
     console.log('matching_socket in chat.js name ' + user_id)
@@ -39,6 +40,7 @@ function chat() {
     else {
       var room = data.target_room
       var chatroom_socket = io.connect('https://' + document.domain + '/chatroom');
+      // var chatroom_socket = io.connect('http://' + document.domain + location.port + '/chat');
       chatroom_socket.emit('join', {});
       $.ajax({
         url: "/post_room",
@@ -65,9 +67,9 @@ function chat() {
     type: 'GET',
     success: function (response) {
       console.log('frontend matching (chat.js)', response);
-      if (response['url'] != 'waiting') // TODO reponse['result']
+      if (response['url'] != 'waiting') { // TODO reponse['result']
         location.href = response['url'];
-
+      }
     }
   });
 }

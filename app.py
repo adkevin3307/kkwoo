@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SESSION_USE_SINGER'] = True
 app.config['SESSION_PERMANENT'] = False
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days = 31)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.debug = True
 # app.config['SESSION_REDIS'] = Redis(
@@ -89,7 +89,6 @@ def chat():
         return redirect('/index')
     return render_template('chat.html')
     
-
 @app.route('/chatroom')
 def chatroom():
     if 'user_id' not in session:
