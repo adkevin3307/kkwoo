@@ -56,13 +56,14 @@ def redirect_uri():
 
 @app.route('/online')
 def online():
-    return jsonify({'result': ('user_id' in session)})
+    return jsonify({'result': ('user_id' in session), 'user_id': session['user_id'], 'user_name': session['username']})
 
 @app.route('/match')
 def match():
     start = time()
     me = session.get('user_id')
     room = session.get('room')
+    print('matching pool: {}'.format(matching_pool))
     for user in matching_pool:
         if is_suit(user, me):
             print('user: {}, me: {}, room: {}'.format(user, me, room))
@@ -70,18 +71,23 @@ def match():
             # matching_pool.remove(user) # set version pool
             del matching_pool[user]  # dict version pool
             return jsonify({'url': '/chatroom'})
-        if time() - matching_pool[user] >= 300:
-            del matching_pool[user]
-            socketio.emit(user, {'target_room': 'None'}, broadcast = True, namespace = '/chat')
-        if time() - start >= 30: # TTL: 30s
-            return jsonify({'url': '/sorry'})
+        # if time() - matching_pool[user] >= 300:
+        #    del matching_pool[user]
+        #    socketio.emit(user, {'target_room': 'None'}, broadcast = True, namespace = '/chat')
+        # if time() - start >= 30: # TTL: 30s
+        #    return jsonify({'url': '/sorry'})
     else: # not match in the pool
+        print('{} join in to matching pool'.format(me))
         matching_pool[me] = time() # dict version pool
         return jsonify({'url': 'waiting'}) # TODO should be result: 'waiting'
 
 @app.route('/sorry')
 def sorry():
     return render_template('sorry.html')
+
+@app.route('/bar')
+def bar():
+    return render_template('bar.html')
 
 @app.route('/chat')
 def chat():
@@ -136,8 +142,10 @@ def on_leave(data):
     # username = session.get('username')
     user_id = session.get('user_id')
     room = session.get('room')
-    leave_room(room)
     emit('message', {'user_id': user_id, 'msg': 'has left the room.'}, room = room)
+    leave_room(room)
+    session['room'] = user_id
+    print('{} leave room'.format(session))
 
 if __name__ == '__main__':
     socketio.run(app, host = '0.0.0.0', port = '5000')

@@ -1,47 +1,60 @@
-window.onload = function () {
+var user_id;
+
+$(document).ready(function () {
+
   $.ajax({
     url: '/online',
     type: 'GET',
     success: function (result) {
       console.log(result)
       if (result['result']) {
-        swal.fire({
-          "title": "認證成功"
-        });
+        user_id = result['user_id']
+        document.cookie = "user_id =" + result['user_id'];
+        document.cookie = "user_name =" + result['user_name'];
       }
     }
+  }).then(() => {
+    swal.fire({
+      "title": "Hi "+ getCookie("user_name") + " :D !"
+    });
   });
-};
 
-var user_id;
+  // $("#bar").load("/bar");
 
-$(document).ready(function () {
-  $.ajax({
-    url: "/get_user",
-    type: "GET",
-    async: false,
-    success: function (result) {
-      user_id = result['user_id']
-      document.cookie = "user_id =" + result['user_id'];
-    }
-  });
+  // $.ajax({
+  //   url: "/get_user",
+  //   type: "GET",
+  //   async: false,
+  //   success: function (result) {
+  //     user_id = result['user_id']
+  //     document.cookie = "user_id =" + result['user_id'];
+  //   }
+  // });
 });
 
 
 function chat() {
-  var matching_socket = io.connect('https://' + document.domain + '/chat');
-  // var matching_socket = io.connect('http://' + document.domain + location.port + '/chat');
+  var matching_socket;
+
+  if (location.port)
+    matching_socket = io.connect('http://' + document.domain + location.port + '/chat');
+  else
+    matching_socket = io.connect('https://' + document.domain + '/chat');
+
   console.log("user in chat " + user_id);
   matching_socket.on(user_id, function (data) {
     console.log('matching_socket in chat.js name ' + user_id)
-    if (data.target_room === 'None') {
+    if (data['target_room'] === 'None') {
       location.href = '/sorry';
     }
     else {
-      var room = data.target_room
-      var chatroom_socket = io.connect('https://' + document.domain + '/chatroom');
-      // var chatroom_socket = io.connect('http://' + document.domain + location.port + '/chat');
-      chatroom_socket.emit('join', {});
+      var room = data["target_room"]
+      // if (location.port)
+      //   var chatroom_socket = io.connect('http://' + document.domain + location.port + '/chat');
+      // else
+      //   var chatroom_socket = io.connect('https://' + document.domain + '/chatroom');
+      // chatroom_socket.emit('join', {});
+
       $.ajax({
         url: "/post_room",
         type: "POST",

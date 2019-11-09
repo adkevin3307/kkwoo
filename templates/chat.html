@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     crossorigin="anonymous">
   <link rel="stylesheet" href="../static/css/index.css">
+  <script src='../static/js/cookie.js'></script>
   <script src="../static/js/chat.js" ></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
   <link rel="shortcut icon" href="../static/img/kkwoo.ico">
@@ -19,17 +20,18 @@
 <body class="text-center">
   <img class='myimg' src='../static/img/kkwoo.png'>
   <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
-    <header class="masthead mb-auto">
-      <header class="masthead mb-auto">
-        <div class="inner">
-          <nav class="nav nav-masthead justify-content-center">
-            <a class="nav-link" href="/index">Home</a>
-            <a class="nav-link active" href="/chat">ChatRoom</a>
-            <a class="nav-link" href="/contact">Contact</a>
-          </nav>
-        </div>
-      </header>
+
+    <header id="bar" class="masthead mb-auto">
+      <div class="inner">
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link" href="/index">Home</a>
+          <a class="nav-link active" href="/chat">ChatRoom</a>
+          <a class="nav-link" href="/contact">Contact</a>
+        </nav>
+      </div>
+      <div></div>
     </header>
+
 
     <main role="main" class="inner cover">
       <h1 class="cover-heading"> KKWoo</h1>
