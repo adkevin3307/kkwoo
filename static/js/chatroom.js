@@ -3,13 +3,13 @@ $(document).ready(function () {
   console.log("in chatroom.html");
 
   var socket;
-  
+
   if(location.port)
     socket = io.connect('http://' + document.domain + ":" +location.port + '/chatroom');
   else
     socket = io.connect('https://' + document.domain + '/chatroom');
 
-  
+
 
   socket.on('connect', function () {
     socket.emit('join', {});
@@ -69,4 +69,3 @@ $(document).ready(function () {
   });
 
 });
-

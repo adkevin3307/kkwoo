@@ -1,5 +1,5 @@
 var user_id;
-
+var matchAjax;
 $(document).ready(function () {
 
   $.ajax({
@@ -37,7 +37,7 @@ function chat() {
   var matching_socket;
 
   if (location.port)
-    matching_socket = io.connect('http://' + document.domain + location.port + '/chat');
+    matching_socket = io.connect('http://' + document.domain + ":" +  location.port + '/chat');
   else
     matching_socket = io.connect('https://' + document.domain + '/chat');
 
@@ -68,13 +68,22 @@ function chat() {
     }
   });
   Swal.fire({
-    "title": "Loading",
+    "title": "Finding someone to match",
     showConfirmButton: false,
+    allowOutsideClick: false,
+    showCancelButton:true,
     onBeforeOpen: () => {
       Swal.showLoading();
     }
+  }).then((result)=>{
+    if(!result.value)
+    {
+      matchAjax.abort();
+      Swal.fire("Cancel!");
+    }
   })
-  $.ajax({
+
+  matchAjax = $.ajax({
     url: '/match',
     async: true,
     type: 'GET',

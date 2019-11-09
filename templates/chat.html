@@ -1,48 +1,45 @@
 <html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+    <script src='../static/js/cookie.js'></script>
+    <script src="../static/js/sweet.js" ></script>
+    <script src="../static/js/chat.js" ></script>
+    <link rel="shortcut icon" href="../static/img/kkwoo.ico">
+    <link rel="stylesheet" href="../static/css/index.css">
+  </head>
 
-<head>
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    crossorigin="anonymous">
-  <link rel="stylesheet" href="../static/css/index.css">
-  <script src='../static/js/cookie.js'></script>
-  <script src="../static/js/chat.js" ></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
-  <link rel="shortcut icon" href="../static/img/kkwoo.ico">
-</head>
+  <title>KKWoo</title>
 
-<title>KKWoo</title>
+  <body class="text-center">
+    <img class='myimg' src='../static/img/kkwoo.png'>
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
 
-<body class="text-center">
-  <img class='myimg' src='../static/img/kkwoo.png'>
-  <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
-
-    <header id="bar" class="masthead mb-auto">
-      <div class="inner">
-        <nav class="nav nav-masthead justify-content-center">
-          <a class="nav-link" href="/index">Home</a>
-          <a class="nav-link active" href="/chat">ChatRoom</a>
-          <a class="nav-link" href="/contact">Contact</a>
-        </nav>
-      </div>
-      <div></div>
-    </header>
+      <header id="bar" class="masthead mb-auto">
+        <div class="inner">
+          <nav class="nav nav-masthead justify-content-center">
+            <a class="nav-link" href="/index">Home</a>
+            <a class="nav-link active" href="/chat">ChatRoom</a>
+            <a class="nav-link" href="/contact">Contact</a>
+          </nav>
+        </div>
+        <div></div>
+      </header>
 
 
-    <main role="main" class="inner cover">
-      <h1 class="cover-heading"> KKWoo</h1>
-      <br>
-      <p class="lead">
-        <a href="#" class="btn btn-lg btn-secondary" onclick="chat()"> 點擊開始聊天 </a>
-      </p>
-    </main>
+      <main role="main" class="inner cover">
+        <h1 class="cover-heading"> KKWoo</h1>
+        <br>
+        <p class="lead">
+          <a href="#" class="btn btn-lg btn-secondary" onclick="chat()"> 點擊開始聊天 </a>
+        </p>
+      </main>
 
-    <footer class="mastfoot mt-auto">
-    </footer>
-  </div>
-</body>
+      <footer class="mastfoot mt-auto">
+      </footer>
+    </div>
+  </body>
 <html>
