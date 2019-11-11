@@ -1,15 +1,10 @@
 import os
-from datetime import timedelta
-from flask import Flask, request, render_template, redirect, session, jsonify
-from flask_socketio import SocketIO, emit, send, join_room, leave_room
 import kkbox_api
-from algorithm import is_suit
 from time import time
-# from flask_migrate import Migrate, MigrateCommand
-# from redis import Redis
-# from flask_session import Session
-
-# passwd = open('redis_config.txt', 'r').read()
+from algorithm import is_suit
+from datetime import timedelta
+from flask_socketio import SocketIO, emit, send, join_room, leave_room
+from flask import Flask, request, render_template, redirect, session, jsonify
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
@@ -18,15 +13,7 @@ app.config['SESSION_PERMANENT'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days = 31)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.debug = True
-# app.config['SESSION_REDIS'] = Redis(
-#     host = 'localhost',
-#     port = 6379,
-#     password = passwd
-# )
-# app.config['SESSION_TYPE'] = 'redis'
-# app.config.from_object(__name__)
 
-# Session(app)
 socketio = SocketIO(app)
 
 matching_pool = {}
@@ -62,23 +49,23 @@ def online():
 def match():
     start = time()
     me = session.get('user_id')
-    room = session.get('room')
+    session['room'] = me
     print('matching pool: {}'.format(matching_pool))
     for user in matching_pool:
         if is_suit(user, me):
-            print('user: {}, me: {}, room: {}'.format(user, me, room))
-            socketio.emit(user, {'target_room': room}, broadcast = True, namespace = '/chat')
-            # matching_pool.remove(user) # set version pool
-            del matching_pool[user]  # dict version pool
+            print('user: {}, me: {}, room: {}'.format(user, me, user))
+            session['room'] = user
+            socketio.emit(user, {'is_match': True}, broadcast = True, namespace = '/chat')
+            del matching_pool[user]
             return jsonify({'url': '/chatroom'})
-        # if time() - matching_pool[user] >= 300:
-        #    del matching_pool[user]
-        #    socketio.emit(user, {'target_room': 'None'}, broadcast = True, namespace = '/chat')
-        # if time() - start >= 30: # TTL: 30s
-        #    return jsonify({'url': '/sorry'})
+        if time() - matching_pool[user] >= 300:
+            del matching_pool[user]
+            socketio.emit(user, {'is_match': False}, broadcast = True, namespace = '/chat')
+        if time() - start >= 30: # TTL: 30s
+            return jsonify({'url': '/sorry'})
     else: # not match in the pool
         print('{} join in to matching pool'.format(me))
-        matching_pool[me] = time() # dict version pool
+        matching_pool[me] = time()
         return jsonify({'url': 'waiting'}) # TODO should be result: 'waiting'
 
 @app.route('/sorry')
@@ -112,24 +99,16 @@ def contact():
 def get_user():
     return jsonify({'user_id': session.get('user_id')})
 
-@app.route('/post_room', methods = ['POST'])
-def post_room():
-    if request.method == 'POST':
-        session['room'] = request.values['target_room']
-        return jsonify({'url': '/chatroom'})
-
 @socketio.on('join', namespace = '/chatroom')
 def on_join(data):
     print('{} join'.format(session))
-    # username = session.get('username')
     user_id = session.get('user_id')
     room = session.get('room')
     join_room(room)
-    emit('message', {'user_id': user_id, 'msg': 'has entered the room :D'}, room = room)
+    emit('message', {'user_id': user_id, 'msg': False}, room = room)
 
 @socketio.on('text', namespace = '/chatroom')
 def message(data):
-    # username = session.get('username')
     user_id = session.get('user_id')
     room = session.get('room')
     msg = data['msg'].lstrip()
@@ -139,10 +118,9 @@ def message(data):
 
 @socketio.on('leave', namespace = '/chatroom')
 def on_leave(data):
-    # username = session.get('username')
     user_id = session.get('user_id')
     room = session.get('room')
-    emit('message', {'user_id': user_id, 'msg': 'has left the room.'}, room = room)
+    emit('message', {'user_id': user_id, 'msg': 'Left the room.'}, room = room)
     leave_room(room)
     session['room'] = user_id
     print('{} leave room'.format(session))

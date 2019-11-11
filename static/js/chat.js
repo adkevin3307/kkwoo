@@ -1,5 +1,6 @@
 var user_id;
 var matchAjax;
+
 $(document).ready(function () {
 
   $.ajax({
@@ -15,7 +16,7 @@ $(document).ready(function () {
     }
   }).then(() => {
     swal.fire({
-      "title": "Hi "+ getCookie("user_name") + " :D !"
+      "title": "Hi " + getCookie("user_name") + " :D !"
     });
   });
 
@@ -37,53 +38,55 @@ function chat() {
   var matching_socket;
 
   if (location.port)
-    matching_socket = io.connect('http://' + document.domain + ":" +  location.port + '/chat');
+    matching_socket = io.connect('http://' + document.domain + ":" + location.port + '/chat');
   else
     matching_socket = io.connect('https://' + document.domain + '/chat');
 
   console.log("user in chat " + user_id);
+
   matching_socket.on(user_id, function (data) {
     console.log('matching_socket in chat.js name ' + user_id)
-    if (data['target_room'] === 'None') {
+    if (!data['is_match']) {
       location.href = '/sorry';
     }
     else {
-      var room = data["target_room"]
+      // var room = data["target_room"]
       // if (location.port)
-      //   var chatroom_socket = io.connect('http://' + document.domain + location.port + '/chat');
+      //   var chatroom_socket = io.connect('http://' + document.domain  +":"+ location.port + '/chatroom');
       // else
       //   var chatroom_socket = io.connect('https://' + document.domain + '/chatroom');
       // chatroom_socket.emit('join', {});
 
-      $.ajax({
-        url: "/post_room",
-        type: "POST",
-        async: true,
-        data: { 'target_room': room },
-        success: function (response) {
-          console.log(response);
-          location.href = response['url'];
-        }
-      })
+      // $.ajax({
+      //   url: "/post_room",
+      //   type: "POST",
+      //   async: true,
+      //   data: { 'target_room': room },
+      //   success: function (response) {
+      //     console.log(response);
+      //     location.href = response['url'];
+      //   }
+      // })
+      location.href = '/chatroom';
     }
   });
+
   Swal.fire({
     "title": "Finding someone to match",
     showConfirmButton: false,
     allowOutsideClick: false,
-    showCancelButton:true,
+    showCancelButton: true,
     onBeforeOpen: () => {
       Swal.showLoading();
     }
-  }).then((result)=>{
-    if(!result.value)
-    {
+  }).then((result) => {
+    if (!result.value) {
       matchAjax.abort();
       Swal.fire("Cancel!");
     }
   })
 
-  matchAjax = $.ajax({
+  $.ajax({
     url: '/match',
     async: true,
     type: 'GET',
